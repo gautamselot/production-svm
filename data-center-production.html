@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Data Center · Press Production</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<style>
+:root{--bg:#f5f4f0;--card:#fff;--ink:#23262c;--mut:#6b6f76;--line:#e5e2db;--pri:#2c2f36;--onpri:#fff;--acc:#a97c2f;--r:#c0392b;--g:#1d8a4b;--rt:#fbeceb;--gt:#e6f4ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#15171b;--card:#1f2227;--ink:#eceae5;--mut:#9a9da4;--line:#2f333a;--pri:#d9b36c;--onpri:#15171b;--acc:#d9b36c;--r:#ff8072;--g:#4cc98a;--rt:#3a1f22;--gt:#16342a}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#15171b;--card:#1f2227;--ink:#eceae5;--mut:#9a9da4;--line:#2f333a;--pri:#d9b36c;--onpri:#15171b;--acc:#d9b36c;--r:#ff8072;--g:#4cc98a;--rt:#3a1f22;--gt:#16342a}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "Plus Jakarta Sans",system-ui,sans-serif}
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{max-width:1150px;margin:auto;padding:10px 16px;display:flex;align-items:center;gap:12px}.sp{flex:1}
+.brand{display:flex;align-items:center;gap:10px}.brand b{font-size:17px;display:block;line-height:1.1}.brand small{color:var(--mut)}
+.who{font-size:13px;color:var(--mut);text-align:right}.who b{color:var(--ink);display:block}.who a{color:var(--acc);font-weight:700}
+nav{max-width:1150px;margin:auto;padding:0 12px;display:flex;gap:4px;overflow-x:auto}
+nav button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;font:700 14px inherit;color:var(--mut);cursor:pointer;white-space:nowrap}
+nav button.on{color:var(--ink);border-color:var(--acc)}
+main{max-width:1150px;margin:auto;padding:18px 16px 60px}
+h1{font-size:24px;margin:0 0 4px;font-weight:800}h2{font-size:17px;margin:22px 0 10px}.sub{color:var(--mut);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:12px}
+.tile small,.card small{color:var(--mut)}.big{font-size:30px;font-weight:800;line-height:1.2}
+.g{color:var(--g);font-weight:700}.r{color:var(--r);font-weight:700}
+.b{display:inline-block;padding:2px 10px;border-radius:99px;font:700 12px inherit;margin:2px 4px 2px 0;white-space:nowrap}
+.b.g{background:var(--gt);color:var(--g)}.b.r{background:var(--rt);color:var(--r)}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:7px 9px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mut);font-weight:500}
+.ft td{font-weight:700;background:var(--bg)}
+label{display:block;font-size:13px;color:var(--mut);margin:12px 0 4px}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+td input{width:96px;padding:6px 8px}input[type=checkbox]{width:auto}
+.row{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.btn{background:var(--pri);color:var(--onpri);border:0;border-radius:8px;padding:11px 18px;font:700 15px inherit;cursor:pointer}
+.btn.s{background:none;color:var(--ink);border:1px solid var(--line);padding:6px 12px;font-size:13px}.btn.w{width:100%;margin-top:16px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.login{max-width:410px;margin:6vh auto 0;text-align:center}.err{color:var(--r);font-weight:700;min-height:22px;margin-top:10px}
+.pv{margin-top:12px}.al{padding:8px 0;border-bottom:1px solid var(--line)}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--pri);color:var(--onpri);padding:10px 18px;border-radius:99px;font-weight:700;display:none;z-index:9}
+#modal{position:fixed;inset:0;background:rgba(10,12,16,.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:8}
+</style></head><body>
+<header><div class="bar"><div class="brand" id="br"></div><div class="sp"></div><div class="who" id="who"></div></div><nav id="nav"></nav></header>
+<main id="app"></main><div id="toast"></div><div id="modal" onclick="if(event.target==this)this.style.display='none'"><div class="card" id="mbody" style="max-width:420px;text-align:center"></div></div>
+<script>
+const $=s=>document.querySelector(s),pad=(n,l=2)=>String(n).padStart(l,'0'),R2=x=>Math.round(x*100)/100,eq=(a,b)=>Math.abs(a-b)<0.005;
+const LOGO=s=>`<svg width="${s}" height="${s}" viewBox="0 0 48 48" role="img" aria-label="Data Center"><rect width="48" height="48" rx="11" fill="#2c2f36"/><ellipse cx="24" cy="13" rx="12" ry="4.5" fill="#d9b36c"/><path d="M12 13v10c0 2.5 5.4 4.5 12 4.5s12-2 12-4.5V13M12 23v10c0 2.5 5.4 4.5 12 4.5s12-2 12-4.5V23" fill="none" stroke="#d9b36c" stroke-width="2.4"/></svg>`;
+const iso=d=>{const x=new Date(d);return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate())},TD=iso(Date.now());
+const DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],dow=d=>new Date(d+'T00:00').getDay();
+const mdays=mo=>{const[y,m]=mo.split('-').map(Number);return Array.from({length:new Date(y,m,0).getDate()},(_,i)=>mo+'-'+pad(i+1))};
+const fd=d=>pad(+d.slice(8))+' '+MN[+d.slice(5,7)-1],mlab=mo=>new Date(mo+'-01T00:00').toLocaleString('en-IN',{month:'long',year:'numeric'});
+const PR=[['P10','Bhalwani',''],['P9','Bhalwani','5"'],['P5','SUPA',''],['P6','SUPA','5"'],['P7','SUPA','5"']],PID=PR.map(p=>p[0]),pl=p=>{const x=PR.find(y=>y[0]==p);return `${x[0]} (${x[1]}${x[2]?', '+x[2]:''})`};
+const HF=['run','die','pow','man','log','brk','noo','oth'],LIM={die:.5,pow:0,man:0,log:0,brk:1};
+const ROWS=[['inp','Press Input (kg)'],['out','Press Output (kg)'],['rec','Recovery %'],['run','Running Hours'],['die','Die Change Hours','30 min'],['pow','Power Failure Hours','0'],['man','Manpower Shortage Hours','0'],['log','Log Shortage Hours','0'],['brk','Breakdown Hours','60 min'],['noo','No Orders in Hand Hours'],['oth','Other Hours (with reasons)'],['hc','Head Count in Shift'],['dies','Dies Used'],['ord','Open Orders Run (of the above)']];
+let U=[];const uid=n=>{const w=n.toLowerCase().replace(/[^a-z\s]/g,'').split(/\s+/).filter(Boolean),b=w.length>1?w[0]+'.'+w[w.length-1]:w[0]||'user';let id=b,i=2;while(U.some(u=>u.id==id))id=b+i++;return id};
+[['Ravindra Katariya','RK','admin'],['Siddharth Katariya','SSK','admin'],['Shrenik Katariya','SK','admin'],['Shreyans Katariya','SRK','admin'],['Gautam Selot','GS','admin'],['Ukhaji Khaire','UK','hod'],['Ajay Soni','AS','hod'],['Chandrashekhar Thorat','CT','hod']].forEach(([n,a,r])=>U.push({id:uid(n),name:n,ini:a,role:r,pw:'12345',on:1,pr:PID.slice()}));
+let S={u:null,tab:'dash',dt:TD,ed:TD,ep:'P10',rt:'p',rp:'P10',mo:TD.slice(0,7),err:'',ents:{},tgo:{},dflt:{P10:30,P9:8,P5:15,P6:8,P7:8},audit:[{t:'System started',u:'System',at:new Date().toLocaleString()}]};
+const usr=id=>U.find(u=>u.id==id),E=(d,p)=>S.ents[d+'|'+p],tg=(d,p)=>S.tgo[d+'|'+p]??(dow(d)==6?0:S.dflt[p]);
+const val=(e,k)=>R2((+e.a[k]||0)+(+e.b[k]||0)),outT=(d,p)=>{const e=E(d,p);return e?R2(val(e,'out')/1000):null},hsum=s=>HF.reduce((a,k)=>a+(+s[k]||0),0);
+const col=(v,t)=>v==null?'':v>=t?'g':'r',C=(v,n,c)=>({v,n,c}),N=x=>x==null?C(''):C(String(R2(x)),R2(x));
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t.k);t.k=setTimeout(()=>t.style.display='none',2600)};
+const log=t=>S.audit.unshift({t,u:S.u?S.u.id:'System',at:new Date().toLocaleString()});
+const rpw=()=>{const a='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';let p='';for(let i=0;i<8;i++)p+=a[Math.floor(Math.random()*a.length)];return p};
+const TABS={admin:[['dash','Dashboard'],['entry','Entry'],['rep','Reports'],['tgt','Targets'],['team','Team and access'],['aud','Audit log']],hod:[['dash','Dashboard'],['entry','Entry'],['rep','Reports']]};
+const go=t=>{S.tab=t;draw()};
+function login(){const v=$('#li').value.trim().toLowerCase(),u=U.find(x=>x.id==v||x.ini.toLowerCase()==v);if(!u||u.pw!==$('#lp').value||!u.on){S.err='ID or password is incorrect, or the account is inactive.';return draw()}S.err='';S.u=u;S.tab='dash';S.ep=u.role=='admin'?'P10':u.pr[0]||'P10';S.rp=S.ep;draw()}
+function draw(){
+ $('#br').innerHTML=LOGO(34)+'<div><b>Data Center</b><small>Press production</small></div>';
+ if(!S.u){$('#who').innerHTML='';$('#nav').innerHTML='';$('#app').innerHTML=`<div class="login card">${LOGO(64)}<h1 style="margin-top:12px">Data Center</h1><p class="sub">Press production, shift by shift.</p>
+ <label style="text-align:left">User ID or initials</label><input id="li" placeholder="e.g. ravindra.katariya or rk" autocomplete="username" autocapitalize="off"><label style="text-align:left">Password</label><input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key=='Enter')login()">
+ <div class="err">${S.err}</div><button class="btn w" style="margin-top:6px" onclick="login()">Sign in</button><p class="sub" style="margin-top:16px;font-size:12px">Accounts are created only by an admin. Demo password for every account: 12345</p></div>`;return}
+ $('#who').innerHTML=`<b>${S.u.name}</b>${S.u.role=='admin'?'Admin':'HOD'} · ${S.u.id} · <a href="#" onclick="pwForm();return false">Change password</a> · <a href="#" onclick="S.u=null;draw();return false">Sign out</a>`;
+ $('#nav').innerHTML=TABS[S.u.role].map(([k,l])=>`<button class="${S.tab==k?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
+ $('#app').innerHTML=V[S.tab]();if(S.tab=='entry')calc();
+}
+const cell=(c,t='td')=>`<${t} class="${c.c||''}">${c.v}</${t}>`;
+const tbl=M=>`<div class="tw"><table><tr>${M.head.map(h=>`<th>${h}</th>`).join('')}</tr>${M.rows.map(r=>`<tr>${r.map(c=>cell(c)).join('')}</tr>`).join('')}${M.foot.map(r=>`<tr class="ft">${r.map(c=>cell(c)).join('')}</tr>`).join('')}</table></div>`;
+function pressModel(p,mo){const H=['Date','Day','Target (t)','Input (t)','Output (t)','Rec %','Running Hrs','Die Change','Power Failure','Manpower Short.','Logs Short.','Breakdown','No Orders','Other','Total Hrs','Head Count','Dies Used','Open Orders Run'],K=HF;
+ let ti=0,to=0,tt=0,tm=0;const sm=Array(12).fill(0),bl=n=>Array(n).fill(0).map(()=>C(''));
+ const rows=mdays(mo).map(d=>{const e=E(d,p),t=tg(d,p);tm+=t;if(!e)return[C(fd(d)),C(DN[dow(d)]),N(t),...bl(15)];
+  const i=R2(val(e,'inp')/1000),o=R2(val(e,'out')/1000),hs=K.map(k=>val(e,k)),th=R2(hs.reduce((a,b)=>a+b,0)),x=[...hs,th,val(e,'hc'),val(e,'dies'),val(e,'ord')];ti+=i;to+=o;tt+=t;x.forEach((v,j)=>sm[j]+=v);
+  return[C(fd(d)),C(DN[dow(d)]),N(t),N(i),{...N(o),c:col(o,t)},C(i?R2(o/i*100)+'%':'-'),...x.map(N)]});
+ const pc=tm?R2(to/tm*100):0;
+ return{title:'Press report: '+pl(p),sub:mlab(mo)+' · output in tons · green = target met, red = not met',head:H,rows,foot:[[C('Total (reported days)'),C(''),N(tt),N(ti),{...N(to),c:col(to,tt)},C(ti?R2(to/ti*100)+'%':'-'),...sm.map(N)],[C('Monthly target'),C(''),N(tm),...bl(15)],[C('Achieved of monthly target'),C(''),C(''),C(''),{v:pc+'%',c:col(pc,100)},...bl(13)]]}}
+function cumModel(mo){const H=['Date','Day',...PID.map(pl),'Total (t)'],ps=PID.map(()=>0);let T=0,TT=0,pt=PID.map(()=>0);
+ const rows=mdays(mo).map(d=>{const ts=PID.map(p=>tg(d,p)),tsum=ts.reduce((a,b)=>a+b,0);pt=pt.map((x,i)=>x+ts[i]);TT+=tsum;const os=PID.map(p=>outT(d,p));
+  if(os.every(x=>x==null))return[C(fd(d)),C(DN[dow(d)]),...PID.map(()=>C('')),C('')];os.forEach((x,i)=>ps[i]+=x||0);const s=R2(os.reduce((a,b)=>a+(b||0),0));T+=s;
+  return[C(fd(d)),C(DN[dow(d)]),...os.map((x,i)=>({...N(x),c:col(x,ts[i])})),{...N(s),c:col(s,tsum)}]});
+ const q=(x,t)=>{const v=t?R2(x/t*100):0;return{v:v+'%',c:col(v,100)}};
+ return{title:'Cumulative press-wise output',sub:mlab(mo)+' · output in tons · green = target met, red = not met',head:H,rows,foot:[[C('Total produced'),C(''),...ps.map(N),N(R2(T))],[C('Monthly target'),C(''),...pt.map(N),N(R2(TT))],[C('Achieved of monthly target'),C(''),...ps.map((x,i)=>q(x,pt[i])),q(T,TT)]]}}
+const curModel=()=>S.rt=='c'?cumModel(S.mo):pressModel(S.rp,S.mo),fname=()=>'Data-Center-'+(S.rt=='c'?'cumulative':'press-'+S.rp)+'-'+S.mo;
+async function dl(name,data){const d=window.claude?await claude.use('downloads'):null;if(!d)return toast('Downloads are not available in this view');try{await d.save({filename:name,data});toast('Saved '+name)}catch(e){if(e.code!='declined')toast('Could not save the file')}}
+async function xl(){const M=curModel(),X=window.ExcelJS;if(!X)return toast('Excel library did not load. Use the printable report.');const wb=new X.Workbook(),ws=wb.addWorksheet('Report');
+ ws.addRow([M.title]).font={bold:true,size:14,name:'Arial'};ws.addRow([M.sub]);ws.addRow([]);const h=ws.addRow(M.head);h.font={bold:true,name:'Arial'};h.eachCell(c=>{c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFEDE7D8'}};c.alignment={wrapText:true,vertical:'middle'}});
+ [...M.rows,...M.foot].forEach((r,i)=>{const w=ws.addRow(r.map(c=>c.n??c.v));r.forEach((c,j)=>{w.getCell(j+1).font={name:'Arial',bold:i>=M.rows.length||!!c.c,color:c.c=='g'?{argb:'FF1D8A4B'}:c.c=='r'?{argb:'FFC0392B'}:undefined}})});
+ ws.columns.forEach(c=>c.width=13);ws.getColumn(1).width=24;ws.views=[{state:'frozen',ySplit:4,xSplit:2}];dl(fname()+'.xlsx',await wb.xlsx.writeBuffer())}
+function prt(){const M=curModel();dl(fname()+'.html',`<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>${M.title}</title><style>body{font:12px/1.4 system-ui,sans-serif;color:#23262c;margin:20px}h1{font-size:19px;margin:8px 0 2px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:3px 6px;text-align:left}th{background:#f2f0ea}.g{color:#1d8a4b;font-weight:700}.r{color:#c0392b;font-weight:700}.ft td{font-weight:700;background:#f7f5ef}.np{text-align:right}.br{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}@media print{.np{display:none}@page{size:landscape}}</style></head><body><div class="np"><button onclick="print()">Print or save as PDF</button></div><div class="br">${LOGO(30)} Data Center</div><h1>${M.title}</h1><p>${M.sub}. Generated ${new Date().toLocaleString()}.</p>${tbl(M)}</body></html>`)}
+const V={};
+V.dash=()=>{const d=S.dt,mo=d.slice(0,7);let to=0,tt=0,n=0,w=0,m=0,mt=0;
+ const cards=PR.map(([p])=>{const e=E(d,p),t=tg(d,p),o=outT(d,p);tt+=t;if(t>0)w++;if(e){n++;to+=o}
+  return `<div class="card"><small>${pl(p)}</small><div class="big ${e?col(o,t):''}">${e?o+' t':t>0?'No entry':'Off day'}</div><small>Target ${t} t</small>${e?`<div class="pv"><span class="b g">A 12 h</span><span class="b g">B 12 h</span><span class="b g">24 h tally</span></div>`:''}</div>`}).join('');
+ mdays(mo).filter(x=>x<=d).forEach(x=>PID.forEach(p=>{mt+=tg(x,p);m+=outT(x,p)||0}));to=R2(to);m=R2(m);
+ const al=[];PID.forEach(p=>{const e=E(d,p),t=tg(d,p);if(!e){if(t>0&&d<=TD)al.push(['r',`${p}: no entry for this date`]);return}const o=outT(d,p);if(o<t)al.push(['r',`${p}: output ${o} t is below target ${t} t`]);
+  if(val(e,'log')>0)al.push(['r',`${p}: log shortage ${val(e,'log')} h. For Foundry HOD. Reason: ${e.rs.log}`]);if(val(e,'brk')>LIM.brk)al.push(['r',`${p}: breakdown ${val(e,'brk')} h, above 60 min. For Maintenance HOD. Reason: ${e.rs.brk}`]);
+  if(val(e,'die')>LIM.die)al.push(['r',`${p}: die change ${val(e,'die')} h, above 30 min`]);if(val(e,'pow')>0)al.push(['r',`${p}: power failure ${val(e,'pow')} h`]);if(val(e,'man')>0)al.push(['r',`${p}: manpower shortage ${val(e,'man')} h`])});
+ const ok=Object.values(S.ents).every(e=>eq(hsum(e.a),12)&&eq(hsum(e.b),12));
+ return `<h1>Dashboard</h1><p class="sub">Output per press against target. Green means the target is met, red means it is not.</p><div class="row" style="max-width:220px"><div><label style="margin-top:0">Date</label><input type="date" value="${d}" max="${TD}" onchange="S.dt=this.value||TD;draw()"></div></div>
+ <div class="grid"><div class="card"><small>Total output</small><div class="big ${n?col(to,tt):''}">${to} t</div><small>Target ${R2(tt)} t</small></div><div class="card"><small>Month to date</small><div class="big ${col(m,mt)}">${m} t</div><small>Target to date ${R2(mt)} t</small></div><div class="card"><small>Entries made</small><div class="big">${n} of ${w}</div><small>working presses</small></div><div class="card"><small>24 hour tally</small><div class="big ${ok?'g':'r'}">${ok?'All match':'Mismatch'}</div><small>every saved entry</small></div></div>
+ <h2>Presses</h2><div class="grid">${cards}</div><h2>Alerts</h2><div class="card">${al.map(a=>`<div class="al"><span class="${a[0]}">●</span> ${a[1]}</div>`).join('')||'<span class="g">No alerts for this date.</span>'}<p class="sub" style="margin:10px 0 0;font-size:12px">Forwarding to the Foundry and Maintenance HOD phones will be switched on when Telegram or WhatsApp is connected.</p></div>
+ ${S.u.role=='admin'?`<h2>Demo tools</h2><div class="card"><button class="btn s" onclick="sample()">Load sample data for ${mlab(S.mo)}</button> <button class="btn s" onclick="S.ents={};log('Cleared all entries');draw()">Clear all entries</button></div>`:''}`};
+function sample(){let k=7;const r=()=>(k=(k*9301+49297)%233280)/233280;mdays(S.mo).filter(d=>d<=TD).forEach(d=>PID.forEach(p=>{const t=tg(d,p);if(!t)return;
+ const sh=()=>{const o=Math.round(t*500*(.78+r()*.4)),die=R2(r()*.5),brk=r()<.25?R2(1+r()):R2(r()*.5),lg=r()<.1?.5:0;return{inp:Math.round(o/(.76+r()*.1)),out:o,run:R2(12-die-brk-lg),die,pow:0,man:0,log:lg,brk,noo:0,oth:0,hc:8+Math.floor(r()*5),dies:2+Math.floor(r()*5),ord:3+Math.floor(r()*5)}};
+ S.ents[d+'|'+p]={a:sh(),b:sh(),rs:{log:'Sample reason',brk:'Sample reason',oth:''},by:'ukhaji.khaire',st:'submitted'}}));log('Loaded sample data');toast('Sample data loaded');draw()}
+V.entry=()=>{const adm=S.u.role=='admin',al=adm?PID:S.u.pr,d=S.ed;if(!al.includes(S.ep))S.ep=al[0];const p=S.ep,e=E(d,p),lk=e&&e.st=='locked'&&!adm;
+ if(!al.length)return '<h1>Entry</h1><p class="sub">No presses are assigned to you. Ask an admin.</p>';
+ const v=(k,s)=>{const x=e&&e[s=='A'?'a':'b'][k];return x==null?'':x},inp=(k,s)=>`<input id="${k}${s}" type="number" step="0.01" min="0" inputmode="decimal" value="${v(k,s)}" oninput="calc()" ${lk?'disabled':''}>`;
+ const rows=ROWS.map(([k,l,lim])=>(k=='run'?'<tr><th colspan="5">Shift hours: each shift must add up to 12 h, the day to 24 h</th></tr>':k=='hc'?'<tr><th colspan="5">Shift details</th></tr>':'')+(k=='rec'?`<tr><td>${l}</td><td id="recA">-</td><td id="recB">-</td><td id="recT">-</td><td></td></tr>`:`<tr><td>${l}</td><td>${inp(k,'A')}</td><td>${inp(k,'B')}</td><td id="t_${k}">-</td><td id="lm_${k}">${lim?'Limit '+lim:''}</td></tr>`)).join('');
+ const rs=(k,l)=>`<label>${l}: reason and action</label><input id="rs_${k}" value="${(e&&e.rs[k])||''}" ${lk?'disabled':''}>`;
+ return `<h1>Daily entry</h1><p class="sub">One entry per press per day, in two 12 hour shifts. Target for this press today: <b>${tg(d,p)} t</b>.</p>
+ <div class="card"><div class="row"><div><label style="margin-top:0">Date</label><input type="date" value="${d}" max="${TD}" onchange="S.ed=this.value||TD;draw()"></div><div><label style="margin-top:0">Press</label><select onchange="S.ep=this.value;draw()">${al.map(x=>`<option value="${x}" ${x==p?'selected':''}>${pl(x)}</option>`).join('')}</select></div><div><label style="margin-top:0">Status</label><div style="padding-top:8px">${e?`<span class="b ${e.st=='locked'?'r':'g'}">${e.st}</span> by ${usr(e.by)?usr(e.by).name:e.by}`:'<span class="b r">not entered</span>'}${adm&&e?` <button class="btn s" onclick="lockE()">${e.st=='locked'?'Unlock':'Lock'}</button>`:''}</div></div></div></div>
+ <div class="card tw" style="margin-top:12px"><table><tr><th></th><th>Shift A (Day)</th><th>Shift B (Night)</th><th>Total</th><th>Daily allowable limit</th></tr>${rows}</table></div>
+ <div class="card" style="margin-top:12px">${rs('log','Log shortage')}${rs('brk','Breakdown')}${rs('oth','Other hours')}<div class="pv" id="tal"></div>${lk?'<p class="sub">This entry is locked. Ask an admin to unlock it.</p>':'<button class="btn w" onclick="saveE()">Save entry</button>'}</div>`};
+const g=id=>parseFloat(($('#'+id)||{}).value)||0;
+function calc(){const H={A:0,B:0};['A','B'].forEach(s=>{H[s]=HF.reduce((x,k)=>x+g(k+s),0);const i=g('inp'+s),o=g('out'+s);$('#rec'+s).textContent=i?R2(o/i*100)+'%':'-'});
+ ROWS.forEach(([k])=>{if(k=='rec')return;const t=R2(g(k+'A')+g(k+'B'));$('#t_'+k).textContent=t;if(LIM[k]!=null)$('#lm_'+k).className=t>LIM[k]+1e-9?'r':''});
+ const ti=g('inpA')+g('inpB'),to=g('outA')+g('outB');$('#recT').textContent=ti?R2(to/ti*100)+'%':'-';
+ const f=(l,h,m)=>`<span class="b ${eq(h,m)?'g':'r'}">${l}: ${R2(h)} of ${m} h${eq(h,m)?'':h<m?' (left '+R2(m-h)+')':' (over '+R2(h-m)+')'}</span>`;
+ $('#tal').innerHTML=f('Shift A',H.A,12)+f('Shift B',H.B,12)+f('Day total',H.A+H.B,24)}
+function saveE(){const a={},b={};ROWS.forEach(([k])=>{if(k!='rec'){a[k]=g(k+'A');b[k]=g(k+'B')}});
+ if(!eq(hsum(a),12)||!eq(hsum(b),12))return toast('Each shift must add up to exactly 12 hours');if(a.out>a.inp||b.out>b.inp)return toast('Output cannot be more than input');
+ const rs={log:$('#rs_log').value.trim(),brk:$('#rs_brk').value.trim(),oth:$('#rs_oth').value.trim()},T=k=>a[k]+b[k];
+ if((T('log')>0&&!rs.log)||(T('brk')>0&&!rs.brk)||(T('oth')>0&&!rs.oth))return toast('Give reasons and actions for log shortage, breakdown and other hours');
+ const k=S.ed+'|'+S.ep;S.ents[k]={a,b,rs,by:S.u.id,st:(S.ents[k]||{}).st||'submitted'};log('Saved entry '+k);toast('Entry saved');draw()}
+function lockE(){const e=E(S.ed,S.ep);e.st=e.st=='locked'?'submitted':'locked';log((e.st=='locked'?'Locked ':'Unlocked ')+S.ed+'|'+S.ep);draw()}
+V.rep=()=>{const M=curModel(),c=S.rt=='c';return `<h1>Reports</h1><p class="sub">Output font is green when the target is met and red when it is not.</p>
+ <div class="card"><div class="row"><div><label style="margin-top:0">Report</label><select onchange="S.rt=this.value;draw()"><option value="p" ${c?'':'selected'}>Press report (one press)</option><option value="c" ${c?'selected':''}>Cumulative report (all presses)</option></select></div>
+ ${c?'':`<div><label style="margin-top:0">Press</label><select onchange="S.rp=this.value;draw()">${(S.u.role=='admin'?PID:S.u.pr).map(x=>`<option value="${x}" ${x==S.rp?'selected':''}>${pl(x)}</option>`).join('')}</select></div>`}
+ <div><label style="margin-top:0">Month</label><input type="month" value="${S.mo}" onchange="S.mo=this.value||S.mo;draw()"></div></div>
+ <div style="margin-top:12px"><button class="btn s" onclick="xl()">Excel</button> <button class="btn s" onclick="prt()">Printable report (PDF)</button></div></div>
+ <div class="card" style="margin-top:12px"><b>${M.title}</b><p class="sub">${M.sub}</p>${tbl(M)}</div>`};
+V.tgt=()=>{const ds=mdays(S.mo);return `<h1>Targets</h1><p class="sub">Daily output target per press, in tons. Saturday defaults to 0. Editing a cell changes that day only.</p>
+ <div class="card"><div class="row"><div><label style="margin-top:0">Month</label><input type="month" value="${S.mo}" onchange="S.mo=this.value||S.mo;draw()"></div>${PID.map(p=>`<div><label style="margin-top:0">Default ${p} (t/day)</label><input type="number" step="0.1" value="${S.dflt[p]}" onchange="setDf('${p}',this.value)"></div>`).join('')}</div><button class="btn s" style="margin-top:12px" onclick="rstMo()">Reset this month to defaults</button></div>
+ <div class="card tw" style="margin-top:12px"><table><tr><th>Date</th><th>Day</th>${PR.map(p=>`<th>${p[0]}<br><small>${p[1]}</small></th>`).join('')}<th>Total</th></tr>${ds.map(d=>`<tr><td>${fd(d)}</td><td>${DN[dow(d)]}</td>${PID.map(p=>`<td><input type="number" step="0.1" min="0" value="${tg(d,p)}" onchange="setTg('${d}','${p}',this.value)"></td>`).join('')}<td>${R2(PID.reduce((a,p)=>a+tg(d,p),0))}</td></tr>`).join('')}<tr class="ft"><td colspan="2">Monthly target</td>${PID.map(p=>`<td>${R2(ds.reduce((a,d)=>a+tg(d,p),0))}</td>`).join('')}<td>${R2(ds.reduce((a,d)=>a+PID.reduce((x,p)=>x+tg(d,p),0),0))}</td></tr></table></div>`};
+function setDf(p,v){S.dflt[p]=Math.max(0,+v||0);log('Default target '+p+' = '+S.dflt[p]);draw()}
+function setTg(d,p,v){S.tgo[d+'|'+p]=Math.max(0,+v||0);log('Target '+d+' '+p+' = '+S.tgo[d+'|'+p]);draw()}
+function rstMo(){Object.keys(S.tgo).filter(k=>k.startsWith(S.mo)).forEach(k=>delete S.tgo[k]);log('Reset targets for '+S.mo);draw()}
+V.team=()=>`<h1>Team and access</h1><p class="sub">Only admins create accounts. Login IDs come from the name. HODs can enter data only for the presses ticked here.</p>
+ <div class="card"><div class="row"><div><label style="margin-top:0">Full name</label><input id="nn"></div><div><label style="margin-top:0">Initials (optional)</label><input id="ni" maxlength="4"></div><div><label style="margin-top:0">Role</label><select id="nr"><option value="hod">HOD</option><option value="admin">Admin</option></select></div></div><button class="btn s" style="margin-top:12px" onclick="addU()">Create account</button></div>
+ <div class="card tw" style="margin-top:12px"><table><tr><th>Name</th><th>Login ID</th><th>Initials</th><th>Role</th><th>Presses (HOD)</th><th>Active</th><th></th></tr>${U.map(u=>`<tr><td>${u.name}</td><td>${u.id}</td><td>${u.ini}</td><td>${u.role=='admin'?'Admin':'HOD'}</td><td>${u.role=='admin'?'All':PID.map(p=>`<label style="display:inline-flex;gap:4px;margin:0 8px 0 0;color:var(--ink)"><input type="checkbox" ${u.pr.includes(p)?'checked':''} onchange="tp('${u.id}','${p}')">${p}</label>`).join('')}</td><td><input type="checkbox" ${u.on?'checked':''} onchange="tog('${u.id}')" aria-label="Active"></td><td><button class="btn s" onclick="reset('${u.id}')">Reset password</button></td></tr>`).join('')}</table></div>`;
+V.aud=()=>`<h1>Audit log</h1><p class="sub">Entries, locks, targets and account changes.</p><div class="card tw"><table><tr><th>When</th><th>Who</th><th>Action</th></tr>${S.audit.map(a=>`<tr><td>${a.at}</td><td>${a.u}</td><td>${a.t}</td></tr>`).join('')}</table></div>`;
+function show(h){$('#mbody').innerHTML=h;$('#modal').style.display='flex'}
+function creds(u,p){show(`<b>Login details</b><p class="sub" style="margin-top:6px">Share these now. The password is not shown again.</p><div class="card" style="text-align:left">ID: <b>${u.id}</b>${u.ini?' (or '+u.ini+')':''}<br>Password: <b>${p}</b></div>`)}
+function addU(){const nm=$('#nn').value.trim();if(!nm)return toast('Enter a name');const u={id:uid(nm),name:nm,ini:$('#ni').value.trim().toUpperCase()||nm.split(' ').map(w=>w[0]).join('').toUpperCase(),role:$('#nr').value,on:1,pr:PID.slice()},p=rpw();u.pw=p;U.push(u);log('Created account '+u.id);draw();creds(u,p)}
+function reset(id){const u=usr(id),p=rpw();u.pw=p;log('Reset password for '+id);creds(u,p)}
+function tog(id){const u=usr(id);if(u==S.u){toast('You cannot deactivate yourself');return draw()}u.on=u.on?0:1;log((u.on?'Activated ':'Deactivated ')+id);draw()}
+function tp(id,p){const u=usr(id);u.pr=u.pr.includes(p)?u.pr.filter(x=>x!=p):[...u.pr,p];log('Presses for '+id+': '+u.pr.join(','))}
+function pwForm(){show(`<b>Change password</b><label style="text-align:left">New password (5 or more characters)</label><input id="np" type="password" autocomplete="new-password"><button class="btn w" onclick="chPw()">Save password</button>`)}
+function chPw(){const v=$('#np').value;if(v.length<5)return toast('Use at least 5 characters');S.u.pw=v;log('Changed own password');$('#modal').style.display='none';toast('Password changed')}
+draw();
+</script></body></html>
